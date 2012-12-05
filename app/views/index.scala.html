@@ -1,10 +1,50 @@
-@()(implicit flash:Flash)
+@()(implicit flash:Flash, analyticsDetails: Option[String])
 
 @nautical("") {
 
 
-
 } {
+
+
+	<div class="well">
+
+		<p>
+			Plan which presents you are giving.
+			<br/>
+			&nbsp;&nbsp;&nbsp;Record which presents you gave to whom and when.
+			<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remember which presents you received and from whom.
+		</p>
+
+	</div>
+
+
+	<div class="well">
+		<form class="form-inline">
+
+			<div class="control-group" id="username-row">
+				<input type="text" class="input-xlarge" id="inputUsername" name="username" placeholder="Your username"  maxlength="100" />
+			</div>
+
+			<div class="control-group">
+					<input type="password" class="input-xlarge" id="inputPassword" name="password" placeholder="Your password" maxlength="100" />
+                 <button type="submit" class="btn btn-primary input-small">log in</button>
+			</div>	
+
+		</form>
+	</div>
+
+
+	<div class="well">
+		<form class="form-inline">
+
+			<div class="control-group">
+					<input type="text" class="input-xlarge" name="email" placeholder="Your email address" maxlength="100" />
+                 <button type="submit" class="btn btn-success input-small">register</button>
+			</div>	
+
+		</form>
+	</div>
 
 
 

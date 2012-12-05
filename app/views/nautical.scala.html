@@ -5,7 +5,7 @@
 <html>
     <head>
         <title>@title</title>
-        <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Wellfleet' />
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/wellfleet.css")" />
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")"/>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/jquery-ui.css")"/>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/grid.css")"/>
@@ -33,12 +33,15 @@
                                 <div id="lookout" class="compartment">
                                     <ul class="horizontal">
                                         <li><a href="@routes.Application.index">Home</a></li>
+                                        <li><a href="#">Plan</a></li>
+                                        <li><a href="#">Given</a></li>
+                                        <li><a href="#">Received</a></li>
                                     </ul>
                                 </div>
                                  <div id="keel" class="structure">
                                     <div id="innerhull" class="structure">
                                         <div id="jib" class="compartment">
-                                        		@**
+                                        	@**
                                             	<div id="logout-box">
                                                 <ul class="breadcrumb">
 

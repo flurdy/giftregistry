@@ -1,9 +1,9 @@
 
 #bow {
-	font-family: "Wellfeet", Arial, sans-serif;
+	font-family: "Wellfleet", Arial, sans-serif;
     text-align: center;
 	margin: 0 0 0 0;
-	padding: 0.2em 0.2em 0 0.2em;
+	padding: 0.2em 0.2em 0.3em 0.2em;
 	height: 1em;
 	font-size: 2.5em;
 	font-weight: bold;
@@ -14,6 +14,10 @@
 #bow h2 { font-size: 0.9em; font-weight: bold; margin: 0 0 0 0; padding: 0 0 0 0; text-align: center}
 
 #bow #tagline { display: none; font-size: 0.4em; float: left; margin: 0 1em 0 0.5em; padding: 0 0 0 0; }
+
+#lookout { text-align: center; }
+
+#jib ul { margin-top: 0.6em; }
 
 #aft { text-align: right; }
 
@@ -33,3 +37,7 @@ ul.horizontal li {
 #aft ul.horizontal li a { text-decoration: none; color: black; }
 #aft ul.horizontal li a:hover,
 #aft ul.horizontal li a:active { text-decoration: underline; color: blue; }
+
+#cargo .btn { float: right; }
+
+#cargo .well { padding-bottom: 0.1em; }

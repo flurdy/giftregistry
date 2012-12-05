@@ -9,5 +9,7 @@ object Application extends Controller {
     Ok(views.html.index())
   }
 
+  implicit def analyticsDetails: Option[String] = None
+
 
 }

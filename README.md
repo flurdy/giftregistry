@@ -37,4 +37,3 @@ The `~` will automatically detect and recompile any changes.
 
 
 
-License: Lesser AGPL v3 & Apache License 2.0

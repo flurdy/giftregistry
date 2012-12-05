@@ -57,9 +57,10 @@
  0053cf
  335577
 */
-body {  background-color: #641464;  color: black; }
+body {  background-color: #345464;  color: black; }
 #hull { background-color: #ffffff;  }
 #bow {   }
+#jib, #ballast { background-color: #b0b0b0; }
 #tug > .compartment > iframe, #tug > .compartment img ,
 #net > .compartment > iframe, #net > .compartment img ,
 #ama > .compartment > iframe, #ama > .compartment img,
@@ -73,7 +74,7 @@ body {  background-color: #641464;  color: black; }
 .compartment { padding: 0.2em 1em; }
 body {  }
 #ocean { margin: 0.2em 0.1em 0.1em 1em; }
-#ballast { min-width: 35em; max-width: 60em; padding: 0 2em 0em 2em; min-height: 24em;  }
+#ballast { min-width: 35em; max-width: 60em; padding: 1.5em 2em 0em 2em; min-height: 24em;  }
 
 #port {  width: 1em; min-width: 1em; }
 #starboard {  width: 4em; min-width: 4em;   }
@@ -156,5 +157,6 @@ body {  }
 #ama > .compartment > iframe, #ama > .compartment img { padding: 0.5em; }
 
 
-#starboard, #tug, #net, #ama, #hatch, #deck, #port, #lookout, #stern,
+#starboard, #tug, #net, #ama, #hatch, #deck, #port, #lookout, #jib, #stern,
 #foremast, #lighthouse, #buoy { display: none; }
+
