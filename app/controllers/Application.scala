@@ -43,11 +43,10 @@ object Application extends Controller with Secured {
 		Ok(views.html.index())
 	}
 
-	def register = Action { implicit request =>
-		registerForm.bindFromRequest.fold (
+	def startRegistration = Action { implicit request =>
+		simpleRegisterForm.bindFromRequest.fold (
 		    formWithErrors => Redirect(routes.Application.showRegistration),
 		    emailEntered => {
-		    		Logger.info("register")
 		        	Redirect(routes.Application.showRegistration()).flashing(
 		        	  "emailEntered" -> emailEntered.toString
 		        	)
@@ -57,6 +56,26 @@ object Application extends Controller with Secured {
 
 	def showRegistration =  Action { implicit request =>
 		Ok(views.html.registration(registerForm))
+	}
+
+	def register = Action { implicit request =>
+		registerForm.bindFromRequest.fold (
+		    formWithErrors => {
+		    	BadRequest(views.html.registration(formWithErrors)).flashing("messageError"->"Please correct your entries")
+		    },
+		    formEntered => {
+		    		Logger.info("registering %s".format(formEntered._1))
+
+		    		// TODO 
+
+		        	Redirect(routes.Application.index).flashing(
+		        	  "messageSuccess" -> """
+		        	  	You have registered! 
+		        	  	Please click on the link in the email we have sent to you 
+		        	  """
+	        		)		     
+		    }
+		)		
 	}
 
 	def login = TODO

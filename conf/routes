@@ -5,8 +5,11 @@
 # Home page
 GET     /                           controllers.Application.index
 GET     /index.html                 controllers.Application.index
+POST    /startregistration                   controllers.Application.startRegistration
 POST    /register                   controllers.Application.register
 GET    /register.html                   controllers.Application.showRegistration
+GET    /startregistration                   controllers.Application.showRegistration
+GET    /register                   controllers.Application.showRegistration
 POST    /login                      controllers.Application.login
 
 # Map static resources from the /public folder to the /assets URL path
