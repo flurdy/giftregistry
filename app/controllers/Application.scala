@@ -42,8 +42,7 @@ object Application extends Controller with Secured {
       }
     }) verifying("Username is already taken, please try another", fields => fields match {
       case (username, fullname, email, password, confirmPassword) => {
-      	// TODO check user model
-        true
+        !Person.findByUsername(username.trim).isDefined
       }
     })
    )
@@ -58,9 +57,7 @@ object Application extends Controller with Secured {
 	      }
 		}) verifying("Log in failed. Username does not exist or password is invalid", fields => fields match {
 	      case (username, password) => {
-	      	// TODO check auth
-	      	// User.authenticate(username, password).isDefined
-	      	true
+	      	Person.authenticate(username, password).isDefined
 	      }
 		})
 	)
@@ -78,7 +75,8 @@ object Application extends Controller with Secured {
 		simpleRegisterForm.bindFromRequest.fold (
 		    formWithErrors => Redirect(routes.Application.showRegistration),
 		    emailEntered => {
-	    		Ok(views.html.registration(registerForm.fill(("","",emailEntered.getOrElse(""),"",""))))
+	    		Ok(views.html.registration(registerForm.fill(
+	    			("","",emailEntered.getOrElse(""),"",""))))
 		    }
 		)
 	}
@@ -92,18 +90,17 @@ object Application extends Controller with Secured {
 	def register = Action { implicit request =>
 		registerForm.bindFromRequest.fold (
 		    formWithErrors => {
-		    	BadRequest(views.html.registration(formWithErrors)).flashing("messageError"->"Please correct your entries")
+		    	BadRequest(views.html.registration(formWithErrors)).flashing(
+		    		"messageError"->"Please correct your entries")
 		    },
 		    formEntered => {
 		    		Logger.info("registering %s".format(formEntered._1))
 
-		    		// TODO register via model
+		    		val newRegistration = new Person(formEntered._1.trim).encryptPassword(formEntered._2.trim).save
 
 		        	Redirect(routes.Application.index).flashing(
-		        	  "messageSuccess" -> """
-		        	  	You have registered!
-		        	  	Please click on the link in the email we have sent to you
-		        	  """
+		        	  "messageSuccess" -> "You have registered!",
+		        	  "messageWarning" -> "Please click on the link in the email we have sent to you"
 	        		)
 		    }
 		)
@@ -123,9 +120,15 @@ object Application extends Controller with Secured {
 		   formEntered => {
 		    	Logger.info("logging in %s".format(formEntered._1))
 
-		    		// TODO register via model
+		    	Person.authenticate(formEntered._1,formEntered._2) match {
+		    		case Some(person) => {
+		        		Redirect(routes.Application.index()).withSession(
+		        			"username" -> formEntered._1).flashing(
+		        			"message"->"You have logged in")
+		    		}
+		    		case None => BadRequest(views.html.login(loginForm.fill(formEntered._1,""))).flashing("messageError" -> "Could not find person")
+		    	}
 
-        		Redirect(routes.Application.index()).withSession("username" -> formEntered._1).flashing("message"->"You have logged in")
 		    }
 		)
 	}
