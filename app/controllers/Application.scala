@@ -17,6 +17,8 @@ object Application extends Controller with Secured {
 
 	val ValidUsername = """^[a-zA-Z0-9-_]+$""".r
 
+	val InvalidText = """[;#\/\\:]""".r
+
 	val simpleRegisterForm = Form(
 		"email" -> optional(text(maxLength = 100))
 	)
@@ -34,7 +36,7 @@ object Application extends Controller with Secured {
      }
     }) verifying("Email address is not valid", fields => fields match {
       case (username, fullname, email, password, confirmPassword) => {
-        ValidEmailAddress.findFirstIn(email.trim).isDefined
+        !InvalidText.findFirstIn(email.trim).isDefined && ValidEmailAddress.findFirstIn(email.trim).isDefined
       }
     }) verifying("Username is not valid. Only alphanumeric allowed. No spaces", fields => fields match {
       case (username, fullname, email, password, confirmPassword) => {
@@ -96,7 +98,7 @@ object Application extends Controller with Secured {
 		    formEntered => {
 		    		Logger.info("registering %s".format(formEntered._1))
 
-		    		val newRegistration = new Person(formEntered._1.trim).encryptPassword(formEntered._2.trim).save
+		    		new Person(formEntered._1.trim,formEntered._2.trim,formEntered._3.trim).encryptPassword(formEntered._4.trim).save
 
 		        	Redirect(routes.Application.index).flashing(
 		        	  "messageSuccess" -> "You have registered!",

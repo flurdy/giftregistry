@@ -11,7 +11,8 @@ object ApplicationBuild extends Build {
       // Add your project dependencies here,
       "org.mindrot" % "jbcrypt" % "0.3m",
       "com.typesafe" %% "play-plugins-mailer" % "2.0.4",
-      "com.andersen-gott" %% "scravatar" % "1.0.1"
+      "com.andersen-gott" %% "scravatar" % "1.0.1",
+      "com.mongodb.casbah" %% "casbah" % "2.1.5.0"
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(

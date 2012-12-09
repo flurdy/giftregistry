@@ -1,24 +1,26 @@
 package models
 
-import play.api.Play.current
+// import play.api.Play.current
 import org.mindrot.jbcrypt.BCrypt
 // import play.api.db.DB
 // import anorm._
 // import anorm.SqlParser._
-import play.Logger
-import java.math.BigInteger
-import java.security.SecureRandom
-import play.api.Play
+// import play.Logger
+// import java.math.BigInteger
+// import java.security.SecureRandom
+// import play.api.Play
 
 
 case class Person(
 	personId:Option[Long],
-	username: String
+	username: String,
+	fullname: String,
+	email: String
 ){
 
 	var passwordOption: Option[String] = None
 
-	def this(username:String) = this(None,username)
+	def this(username:String,fullname:String,email:String) = this(None,username,fullname,email)
 
 	def encryptPassword(password:String) = {
 		passwordOption = Person.encrypt(password)
@@ -41,11 +43,20 @@ object Person {
 
   def authenticate(username:String,password:String) : Option[Person] = {
   	// TODO
-  		None
+  		if(username=="testuser"){
+  			Some(new Person("testuser","",""))
+		} else {
+	  		None
+		}
   }
 
-  def findByUsername(username:String) = {
-  		None
+  def findByUsername(username:String) : Option[Person] = {
+  		// TODO
+  		if(username=="testuser"){
+  			Some(new Person("testuser","",""))
+		} else {
+	  		None
+		}
   }
 
 }
