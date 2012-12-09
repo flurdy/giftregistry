@@ -30,19 +30,19 @@
 			<div class="control-group">
 					<input type="password" class="input-xlarge" id="inputPassword" name="password" placeholder="Your password" maxlength="100" />
                  <button type="submit" class="btn btn-primary input-small">log in</button>
-			</div>	
+			</div>
 
 		}
 	</div>
 
 
 	<div class="well">
-		@form( action = routes.Application.register, 'class -> "form-inline"){
+		@form( action = routes.Application.startRegistration, 'class -> "form-inline"){
 
 			<div class="control-group">
 					<input type="text" class="input-xlarge" name="email" placeholder="Your email address" maxlength="100" />
                  <button type="submit" class="btn btn-inverse input-small">register</button>
-			</div>	
+			</div>
 
 		}
 	</div>

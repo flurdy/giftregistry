@@ -15,11 +15,13 @@ object Application extends Controller with Secured {
 
 	val ValidEmailAddress = """^[^@]+@[^@]+$""".r
 
-	val simpleRegisterForm = Form(		
+	val ValidUsername = """^[a-zA-Z0-9-_]+$""".r
+
+	val simpleRegisterForm = Form(
 		"email" -> optional(text(maxLength = 100))
 	)
 
-	val registerForm = Form(		
+	val registerForm = Form(
 		tuple(
       "username" -> nonEmptyText(maxLength = 100),
       "fullname" -> nonEmptyText(maxLength = 100),
@@ -34,29 +36,58 @@ object Application extends Controller with Secured {
       case (username, fullname, email, password, confirmPassword) => {
         ValidEmailAddress.findFirstIn(email.trim).isDefined
       }
+    }) verifying("Username is not valid. Only alphanumeric allowed. No spaces", fields => fields match {
+      case (username, fullname, email, password, confirmPassword) => {
+        ValidUsername.findFirstIn(username.trim).isDefined
+      }
+    }) verifying("Username is already taken, please try another", fields => fields match {
+      case (username, fullname, email, password, confirmPassword) => {
+      	// TODO check user model
+        true
+      }
     })
    )
 
+	val loginForm = Form(
+		tuple(
+	      "username" -> nonEmptyText(maxLength = 100),
+	      "password" -> nonEmptyText(minLength = 4, maxLength = 100)
+		) verifying("Username is not valid. Only alphanumeric allowed. No spaces", fields => fields match {
+	      case (username, password ) => {
+	        ValidUsername.findFirstIn(username.trim).isDefined
+	      }
+		}) verifying("Log in failed. Username does not exist or password is invalid", fields => fields match {
+	      case (username, password) => {
+	      	// TODO check auth
+	      	// User.authenticate(username, password).isDefined
+	      	true
+	      }
+		})
+	)
+
+
 	implicit def analyticsDetails: Option[String] = None
+
 
 	def index = Action { implicit request =>
 		Ok(views.html.index())
 	}
 
+
 	def startRegistration = Action { implicit request =>
 		simpleRegisterForm.bindFromRequest.fold (
 		    formWithErrors => Redirect(routes.Application.showRegistration),
 		    emailEntered => {
-		        	Redirect(routes.Application.showRegistration()).flashing(
-		        	  "emailEntered" -> emailEntered.toString
-		        	)
+	    		Ok(views.html.registration(registerForm.fill(("","",emailEntered.getOrElse(""),"",""))))
 		    }
-		)		
+		)
 	}
+
 
 	def showRegistration =  Action { implicit request =>
 		Ok(views.html.registration(registerForm))
 	}
+
 
 	def register = Action { implicit request =>
 		registerForm.bindFromRequest.fold (
@@ -66,18 +97,37 @@ object Application extends Controller with Secured {
 		    formEntered => {
 		    		Logger.info("registering %s".format(formEntered._1))
 
-		    		// TODO 
+		    		// TODO register via model
 
 		        	Redirect(routes.Application.index).flashing(
 		        	  "messageSuccess" -> """
-		        	  	You have registered! 
-		        	  	Please click on the link in the email we have sent to you 
+		        	  	You have registered!
+		        	  	Please click on the link in the email we have sent to you
 		        	  """
-	        		)		     
+	        		)
 		    }
-		)		
+		)
 	}
 
-	def login = TODO
+
+	def showLogin =  Action { implicit request =>
+		Ok(views.html.login(loginForm))
+	}
+
+
+	def login = Action { implicit request =>
+		loginForm.bindFromRequest.fold (
+		   formWithErrors => {
+		   	BadRequest(views.html.login(formWithErrors))
+		   },
+		   formEntered => {
+		    	Logger.info("logging in %s".format(formEntered._1))
+
+		    		// TODO register via model
+
+        		Redirect(routes.Application.index()).withSession("username" -> formEntered._1).flashing("message"->"You have logged in")
+		    }
+		)
+	}
 
 }

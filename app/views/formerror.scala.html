@@ -1,0 +1,22 @@
+@(formErrors:Seq[FormError])
+
+@import helper._
+
+    @if(formErrors){
+    <p class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+            @if(formErrors(0).message == "error.minLength"){
+                Field <em>@formErrors(0).key</em> is too short
+            } else {
+                @if(formErrors(0).message == "error.required"){
+                    Please fill in field <em>@formErrors(0).key</em>
+                } else {
+                    @if(formErrors(0).key == ""){
+                        @formErrors(0).message
+                    } else {
+                        @formErrors(0).message: <em>@formErrors(0).key</em>
+                    }
+                }
+            }
+    </p>
+    }
