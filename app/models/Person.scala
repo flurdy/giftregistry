@@ -9,6 +9,7 @@ import org.mindrot.jbcrypt.BCrypt
 // import java.math.BigInteger
 // import java.security.SecureRandom
 // import play.api.Play
+import com.mongodb.casbah.Imports._
 
 
 case class Person(
