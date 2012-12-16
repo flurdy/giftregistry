@@ -98,7 +98,7 @@ object Application extends Controller with Secured {
 		    formEntered => {
 		    		Logger.info("registering %s".format(formEntered._1))
 
-		    		new Person(formEntered._1.trim,formEntered._2.trim,formEntered._3.trim).encryptPassword(formEntered._4.trim).save
+		    		new Person(formEntered._1.trim,formEntered._2.trim,formEntered._3.trim,formEntered._4.trim).save
 
 		        	Redirect(routes.Application.index).flashing(
 		        	  "messageSuccess" -> "You have registered!",
