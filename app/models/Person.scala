@@ -35,11 +35,18 @@ case class Person(
 
 object Person {
 
+  val mongoConnection = MongoConnection()("giftdb")("person")
+
   def encrypt(password: String) = Some(BCrypt.hashpw(password,BCrypt.gensalt()))
 
   def save(person:Person) = {
-  	// TODO
-  		person
+    val mongoObject = MongoDBObject(
+          "username" -> person.username,
+          "fullname" -> person.fullname,
+          "email" -> person.email)
+    mongoConnection += mongoObject
+    // TODO return new person with id
+    person
   }
 
   def authenticate(username:String,password:String) : Option[Person] = {
@@ -52,12 +59,23 @@ object Person {
   }
 
   def findByUsername(username:String) : Option[Person] = {
-  		// TODO
+      val mongoObject = MongoDBObject("username" -> username)
+      mongoConnection.findOne(mongoObject) map { personObject =>
+
+      }
+
   		if(username=="testuser"){
   			Some(new Person("testuser","",""))
 		} else {
 	  		None
 		}
   }
+
+
+
+
+
+
+
 
 }
