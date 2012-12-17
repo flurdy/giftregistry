@@ -1,4 +1,4 @@
-@(title:String)(breadcrumb:Html)(cargo:Html)(implicit flash:Flash, analyticsDetails: Option[String] = None)
+@(title:String)(breadcrumb:Html)(cargo:Html)(implicit flash:Flash, sessionPerson:Option[Person] = None,analyticsDetails: Option[String] = None)
 
 <!DOCTYPE html>
 
@@ -96,6 +96,13 @@
                                     <a href="http://flurdy.com" title="By flurdy: open source hobby projects"><img id="flurdyLink"
                                         src="@routes.Assets.at("images/flurdy_warped_dual_small.png")"/></a>
                                     <ul class="horizontal">
+                                        @sessionPerson.map{ person =>
+                                            <li>@person.username</li>
+                                            <li><a href="@routes.Application.logout">Log out</a></li>
+                                        }.getOrElse{
+                                            <li><a href="@routes.Application.showLogin">Log in</a>
+                                            <li><a href="@routes.Application.showRegistration">Register</a></li>
+                                        }
                                         <li><a href="http://github.com/flurdy/giftregistry">Project</a>
                                     </ul>
                                 </div>

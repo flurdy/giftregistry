@@ -26,26 +26,28 @@ case class Person(
 
   def this(username:String,fullname:String,email:String,password:String) = {
     this(None,username,fullname,email)
-    encryptPassword(password)
+    passwordOption = Some(password)
   }
 
-	private def encryptPassword(password:String) = {
-		passwordOption = Person.encrypt(password)
-		this
-	}
-
-  def getEncryptedPassword = passwordOption
+  def getEncryptedPassword = {
+    passwordOption match {
+      case Some(password) => Person.encrypt(password)
+      case None => throw new NullPointerException("No password has been set")
+    }
+  }
 
 	def save = Person.save(this)
 
 }
 
-
 object Person {
+
+  def encrypt(password: String) = Some(BCrypt.hashpw(password,BCrypt.gensalt()))
+
+  def passwordMatch(enteredPassword:String,existingPassword:String) = BCrypt.checkpw(enteredPassword,existingPassword)
 
   val mongoPersonConnection = MongoConnection()("giftdb")("person")
 
-  def encrypt(password: String) = Some(BCrypt.hashpw(password,BCrypt.gensalt()))
 
   def save(person:Person) = {
     val newId = new ObjectId
@@ -54,7 +56,7 @@ object Person {
           "username" -> person.username,
           "fullname" -> person.fullname,
           "email" -> person.email,
-          "password" -> person.getEncryptedPassword.get)
+          "password" -> person.getEncryptedPassword)
     mongoPersonConnection += mongoObject
     person.copy(personId = Some(newId))
   }
@@ -65,7 +67,7 @@ object Person {
     val fieldsNeeded = MongoDBObject("password" -> 1)
     mongoPersonConnection.findOne(searchTerm,fieldsNeeded) map { personObject =>
       personObject.getAs[String]("password").map{ existingPassword =>
-        if(BCrypt.checkpw(password,existingPassword)){
+        if(passwordMatch(password,existingPassword)){
           return findByUsername(username)
         } else {
           Logger.info("Password mismatch")
@@ -91,10 +93,6 @@ object Person {
       )
     }
   }
-
-
-
-
 
 
 

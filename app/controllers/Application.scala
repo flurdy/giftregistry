@@ -72,6 +72,8 @@ object Application extends Controller with Secured {
 		Ok(views.html.index())
 	}
 
+  private def findSessionUsername(session:Session) = session.get(Security.username)
+
 
 	def startRegistration = Action { implicit request =>
 		simpleRegisterForm.bindFromRequest.fold (
@@ -110,7 +112,7 @@ object Application extends Controller with Secured {
 
 
 	def showLogin =  Action { implicit request =>
-		Ok(views.html.login(loginForm))
+		Ok(views.html.login(loginForm)).withNewSession
 	}
 
 
@@ -134,5 +136,15 @@ object Application extends Controller with Secured {
 		    }
 		)
 	}
+
+
+
+  def logout = Action {
+    Redirect(routes.Application.index).withNewSession.flashing("message"->"You have been logged out")
+  }
+
+  implicit def sessionPerson : Option[Person]= { implicit session:Session =>
+    findSessionUsername(session).map ( username => Person.findByUsername(username) )
+  }
 
 }
