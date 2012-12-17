@@ -69,7 +69,10 @@ object Application extends Controller with Secured {
 
 
 	def index = Action { implicit request =>
-		Ok(views.html.index())
+    findSessionUsername(request.session) match {
+      case Some(username) => Ok(views.html.indexsession())
+      case None => Ok(views.html.indexnosession())
+    }
 	}
 
   private def findSessionUsername(session:Session) = session.get(Security.username)
