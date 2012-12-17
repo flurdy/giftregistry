@@ -23,6 +23,7 @@ case class Person(
 	private var passwordOption: Option[String] = None
 
   def this(username:String,fullname:String,email:String) = this(None,username,fullname,email)
+
   def this(username:String,fullname:String,email:String,password:String) = {
     this(None,username,fullname,email)
     encryptPassword(password)

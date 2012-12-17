@@ -12,12 +12,10 @@ object ApplicationBuild extends Build {
       "com.typesafe" %% "play-plugins-mailer" % "2.0.4",
       "com.andersen-gott" %% "scravatar" % "1.0.1",
       "org.mongodb" %% "casbah" % "2.4.1",
-      "se.radley" %% "play-plugins-salat" % "1.1"
+      "com.github.athieriot" %% "specs2-embedmongo" % "0.4"
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
-      routesImport += "se.radley.plugin.salat.Binders._",
-      templatesImport += "org.bson.types.ObjectId"
     )
 
 }
