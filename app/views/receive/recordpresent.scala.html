@@ -1,0 +1,65 @@
+@(sessionPerson:Person,fullPresentForm:Form[(String,Option[String],String)])(implicit flash:Flash, analyticsDetails: Option[String])
+
+@import helper._
+
+@nautical("Gift Registry Receive ") {
+
+
+} {
+
+
+<div class="well">
+
+    <h4>Present Received</h4>
+
+</div>
+
+<div class="well">
+
+    <div class="well">
+
+        @form( action = routes.ReceiveController.registerPresent, 'class -> "form-horizontal"){
+
+        <div class="control-group">
+            <label class="control-label" for="inputTitle">Present title</label>
+            <div class="controls">
+                <input type="text" name="title" id="inputTitle"  maxlength="100"
+                       placeholder="Enter a title for the present" value="@fullPresentForm("title").value" />
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="inputDescription">Description</label>
+            <div class="controls">
+                <textarea name="description" id="inputDescription" placeholder="Describe the present if necessary"></textarea>
+            </div>
+        </div>
+
+
+        <div class="control-group">
+            <label class="control-label" for="inputFrom">From</label>
+            <div class="controls">
+                <input type="text" name="from" id="inputFrom"  maxlength="100" placeholder="Who was the present from?"/>
+            </div>
+        </div>
+
+
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-success">add present to registry</button>
+            </div>
+        </div>
+
+
+        }
+    </div>
+
+</div>
+
+
+
+
+
+
+
+}
