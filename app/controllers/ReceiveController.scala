@@ -28,16 +28,27 @@ object ReceiveController extends Controller with Secured {
 
   def startPresentRegistration = withSessionPerson { sessionPerson => implicit request =>
     simpleRegisterForm.bindFromRequest.fold (
-      errors => {
-        Ok(views.html.receive.recordpresent(sessionPerson,fullPresentForm))
-      },
+      errors => Ok(views.html.receive.recordpresent(sessionPerson,fullPresentForm)),
       presentTitle => {
-
         Ok(views.html.receive.recordpresent(sessionPerson,fullPresentForm.fill(presentTitle.getOrElse(""),None,"")))
       }
     )
   }
 
-  def registerPresent = TODO
+  def registerPresent =  withSessionPerson { sessionPerson => implicit request =>
+    fullPresentForm.bindFromRequest.fold (
+      errors => {
+        Logger.warn("Present registration failed")
+        BadRequest(views.html.receive.recordpresent(sessionPerson,errors))
+      },
+      presentForm => {
+
+        new Present(presentForm._1,presentForm._2,presentForm._3).save
+
+        Redirect(routes.ReceiveController.showReceive()).flashing("messageSuccess" -> "Present recorded")
+      }
+    )
+  }
+
 
 }
