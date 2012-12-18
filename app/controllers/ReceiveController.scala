@@ -6,8 +6,12 @@ import play.api.data._
 import play.api.data.Forms._
 import models._
 
-object ReceiveController extends Controller {
+object ReceiveController extends Controller with Secured {
 
-  def showReceive = TODO
+  def showReceive = withSessionPerson { sessionPerson => implicit request =>
+
+    Ok(views.html.receive.receive(sessionPerson))
+
+  }
 
 }

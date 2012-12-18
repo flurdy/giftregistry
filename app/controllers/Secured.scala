@@ -20,4 +20,24 @@ trait Secured {
     Results.Redirect(routes.Application.index)
   }
 
+
+
+
+  def withSessionPerson(f: Person => Request[AnyContent] => Result) = isAuthenticated {
+    username => implicit request =>
+      Person.findByUsername(username).map { sessionPerson =>
+
+        f(sessionPerson)(request)
+
+      }.getOrElse(onUnauthenticated(request))
+  }
+
+  implicit def analyticsDetails: Option[String] = None
+
+
+  implicit def potentialSessionPerson(implicit session:Session) : Option[Person] = {
+    session.get(Security.username).flatMap ( username => Person.findByUsername(username) )
+  }
+
+
 }

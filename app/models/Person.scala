@@ -84,7 +84,6 @@ object Person {
     val searchTerm = MongoDBObject("username" -> username)
     val fieldsNeeded = MongoDBObject("fullname" -> 1,"email" -> 1)
     mongoPersonConnection.findOne(searchTerm,fieldsNeeded) map { personObject =>
-      Logger.info("Found a mongo person!")
       new Person(
         personObject.getAs[ObjectId]("_id"),
         username,

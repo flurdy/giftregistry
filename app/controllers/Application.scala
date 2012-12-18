@@ -65,9 +65,6 @@ object Application extends Controller with Secured {
 	)
 
 
-	implicit def analyticsDetails: Option[String] = None
-
-
 	def index = Action { implicit request =>
     findSessionUsername(request.session) match {
       case Some(username) => Ok(views.html.indexsession())
@@ -144,10 +141,6 @@ object Application extends Controller with Secured {
 
   def logout = Action {
     Redirect(routes.Application.index).withNewSession.flashing("message"->"You have been logged out")
-  }
-
-  implicit def sessionPerson(implicit session:Session) : Option[Person] = {
-    findSessionUsername(session).flatMap ( username => Person.findByUsername(username) )
   }
 
 
