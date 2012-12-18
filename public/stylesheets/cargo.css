@@ -44,3 +44,10 @@ ul.horizontal li {
 #cargo .btn { float: right; }
 
 #cargo .well { padding-bottom: 0.1em; }
+
+
+#cargo #index-page {  }
+
+#cargo #index-page .well { text-align: center; font-size: 18pt; font-weight: bold; padding: 2.7em 1em; }
+
+
