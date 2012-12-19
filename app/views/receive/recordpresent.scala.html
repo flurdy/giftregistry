@@ -1,4 +1,4 @@
-@(sessionPerson:Person,fullPresentForm:Form[(String,Option[String],String)])(implicit flash:Flash, analyticsDetails: Option[String])
+@(sessionPerson:Person,fullPresentForm:Form[(String,Option[String],String,String)])(implicit flash:Flash, analyticsDetails: Option[String])
 
 @import helper._
 
@@ -7,41 +7,73 @@
 
 } {
 
+    @for(error <- fullPresentForm.errors){
+        <p class="alert alert-error error">
+            @if(error.message == "error.required"){
+                Please fill in field: <em>@error.key</em>
+            } else {
+                @if(error.message == "error.maxLength"){
+                   Field too long: <em>@error.key</em>
+                } else {
+                    @if(error.message == "error.minLength"){
+                        Field too short: <em>@error.key</em>
+                    } else {
+                        @error.message
+                    }
+                }
+            }
+        </p>
+    }
+
 
 <div class="well">
 
     <h4>Present Received</h4>
 
-</div>
-
-<div class="well">
-
     <div class="well">
 
         @form( action = routes.ReceiveController.registerPresent, 'class -> "form-horizontal"){
 
+
         <div class="control-group">
-            <label class="control-label" for="inputTitle">Present title</label>
+            <label class="control-label" for="inputEvent">Event</label>
             <div class="controls">
-                <input type="text" name="title" id="inputTitle"  maxlength="100"
-                       placeholder="Enter a title for the present" value="@fullPresentForm("title").value" />
+                <select name="event" id="inputEvent" size="1" class="input-xlarge">
+                    <option value="123" @if(fullPresentForm("event")==123){ selected="selected" }>Christmas 2012</option>
+                    <option value="124" @if(fullPresentForm("event")==124){ selected="selected" }>John's 36th birthday in 2012</option>
+                    <option value="125" @if(fullPresentForm("event")==125){ selected="selected" }>Susan's 34th birthday in 2012</option>
+                    <option value="126" @if(fullPresentForm("event")==126){ selected="selected" }>Christmas 2011</option>
+                    <option value="127" @if(fullPresentForm("event")==127){ selected="selected" }>John's 35th birthday in 2011</option>
+                </select>
             </div>
         </div>
 
-        <div class="control-group">
-            <label class="control-label" for="inputDescription">Description</label>
-            <div class="controls">
-                <textarea name="description" id="inputDescription" placeholder="Describe the present if necessary"></textarea>
-            </div>
-        </div>
 
 
         <div class="control-group">
             <label class="control-label" for="inputFrom">From</label>
             <div class="controls">
-                <input type="text" name="from" id="inputFrom"  maxlength="100" placeholder="Who was the present from?"/>
+                <input type="text" name="from" class="input-xlarge" id="inputFrom" maxlength="100" placeholder="Who was the present from?" value="@fullPresentForm("from").value"/>
             </div>
         </div>
+
+
+        <div class="control-group">
+            <label class="control-label" for="inputTitle">Present title</label>
+            <div class="controls">
+                <input type="text" name="title" class="input-xlarge" id="inputTitle"  maxlength="100"
+                       placeholder="Enter a title for the present" value="@fullPresentForm("title").value" />
+            </div>
+        </div>
+
+
+        <div class="control-group">
+            <label class="control-label" for="inputDescription">Description</label>
+            <div class="controls">
+                <textarea name="description" class="input-xlarge" rows="5" id="inputDescription" placeholder="Describe if necessary">@fullPresentForm("description").value</textarea>
+            </div>
+        </div>
+
 
 
         <div class="control-group">

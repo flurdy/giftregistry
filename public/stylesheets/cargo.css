@@ -50,4 +50,5 @@ ul.horizontal li {
 
 #cargo #index-page .well { text-align: center; font-size: 18pt; font-weight: bold; padding: 2.7em 1em; }
 
-
+#cargo .control-label { width: 130px; }
+#cargo .controls { margin-left: 150px; }

@@ -21,7 +21,7 @@ POST     /receive/present/            controllers.ReceiveController.startPresent
 GET     /receive/present/            controllers.ReceiveController.startPresentRegistration
 POST     /receive/present/add        controllers.ReceiveController.registerPresent
 
-
+POST    /event/                     controllers.EventController.createEvent
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -1,4 +1,4 @@
-@(sessionPerson:Person)(implicit flash:Flash, analyticsDetails: Option[String])
+@(sessionPerson:Person,events:Seq[Event])(implicit flash:Flash, analyticsDetails: Option[String])
 
 @import helper._
 
@@ -26,7 +26,9 @@
 
         <h4>Events</h4>
 
+
         <ol>
+
             <li><a href="#">Christmas 2012</a></li>
             <li><a href="#">John's 36th birthday in 2012</a></li>
             <li><a href="#">Susan's 34th birthday in 2012</a></li>
@@ -36,8 +38,10 @@
 
 
         <div class="well">
-            <input type="text" name="" placeholder="Name of new event"/>
-            <button type="submit" class="btn btn-inverse">add new event</button>
+            @form( action = routes.EventController.createEvent, 'class -> "form-inline"){
+                <input type="text" name="title" placeholder="Name of new event"/>
+                <button type="submit" class="btn btn-inverse">add new event</button>
+            }
         </div>
 
     </div>
@@ -49,9 +53,9 @@
 
             @form( action = routes.ReceiveController.startPresentRegistration, 'class -> "form-inline"){
 
-            <input type="text" name="title" maxlength="100" placeholder="Enter a title for the present"/>
+                <input type="text" name="title" maxlength="100" placeholder="Enter a title for the present"/>
 
-            <button type="submit" class="btn btn-primary">register present</button>
+                <button type="submit" class="btn btn-primary">register present</button>
 
             }
         </div>

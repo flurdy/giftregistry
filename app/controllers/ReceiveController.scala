@@ -16,24 +16,27 @@ object ReceiveController extends Controller with Secured {
     tuple(
       "title" -> text(minLength=2, maxLength = 100),
       "description" -> optional(text(maxLength = 2000)),
-      "from" -> text(minLength=2, maxLength = 100)
+      "from" -> text(minLength=2, maxLength = 100),
+      "event" -> text(maxLength = 100)
     )
   }
 
+
   def showReceive = withSessionPerson { sessionPerson => implicit request =>
-
-    Ok(views.html.receive.receive(sessionPerson))
-
+    val events = Event.findByPerson(sessionPerson)
+    Ok(views.html.receive.receive(sessionPerson,events))
   }
+
 
   def startPresentRegistration = withSessionPerson { sessionPerson => implicit request =>
     simpleRegisterForm.bindFromRequest.fold (
       errors => Ok(views.html.receive.recordpresent(sessionPerson,fullPresentForm)),
       presentTitle => {
-        Ok(views.html.receive.recordpresent(sessionPerson,fullPresentForm.fill(presentTitle.getOrElse(""),None,"")))
+        Ok(views.html.receive.recordpresent(sessionPerson,fullPresentForm.fill(presentTitle.getOrElse(""),None,"","")))
       }
     )
   }
+
 
   def registerPresent =  withSessionPerson { sessionPerson => implicit request =>
     fullPresentForm.bindFromRequest.fold (
@@ -43,9 +46,19 @@ object ReceiveController extends Controller with Secured {
       },
       presentForm => {
 
-        new Present(presentForm._1,presentForm._2,presentForm._3).save
+        Logger.info("Add present to registry")
 
-        Redirect(routes.ReceiveController.showReceive()).flashing("messageSuccess" -> "Present recorded")
+        Event.findById(presentForm._4) match {
+          case Some(event) => {
+            new Present(presentForm._1.trim, presentForm._2, presentForm._3.trim, event).save
+            Redirect(routes.ReceiveController.showReceive()).flashing("messageSuccess" -> "Present recorded")
+          }
+          case None => {
+            Logger.warn("Event not found")
+            NotFound(views.html.receive.recordpresent(sessionPerson,fullPresentForm.fill(
+                presentForm._1, presentForm._2, presentForm._3, presentForm._4))).flashing("messageError"->"Event not found")
+          }
+        }
       }
     )
   }
