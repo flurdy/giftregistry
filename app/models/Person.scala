@@ -14,13 +14,15 @@ import com.mongodb.casbah.Imports._
 
 
 case class Person(
-	personId:Option[ObjectId],
+	personId:Option[String],
 	username: String,
 	fullname: String,
 	email: String
 ){
 
 	private var passwordOption: Option[String] = None
+
+  def this(personId:String) = this(Some(personId),"","","")
 
   def this(username:String,fullname:String,email:String) = this(None,username,fullname,email)
 
@@ -58,7 +60,7 @@ object Person {
           "email" -> person.email,
           "password" -> person.getEncryptedPassword)
     mongoPersonConnection += mongoObject
-    person.copy(personId = Some(newId))
+    person.copy(personId = Some(newId.toString))
   }
 
 
@@ -85,7 +87,7 @@ object Person {
     val fieldsNeeded = MongoDBObject("fullname" -> 1,"email" -> 1)
     mongoPersonConnection.findOne(searchTerm,fieldsNeeded) map { personObject =>
       new Person(
-        personObject.getAs[ObjectId]("_id"),
+        Some(personObject.getAs[ObjectId]("_id").get.toString),
         username,
         personObject.getAs[String]("fullname").getOrElse(""),
         personObject.getAs[String]("email")getOrElse("")

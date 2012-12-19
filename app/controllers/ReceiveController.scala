@@ -23,8 +23,9 @@ object ReceiveController extends Controller with Secured {
 
 
   def showReceive = withSessionPerson { sessionPerson => implicit request =>
-    val events = Event.findByPerson(sessionPerson)
-    Ok(views.html.receive.receive(sessionPerson,events))
+    val occasions = Occasion.findByPerson(sessionPerson)
+    Logger.info("Occasions found %d".format(occasions.size))
+    Ok(views.html.receive.receive(sessionPerson,occasions))
   }
 
 
@@ -48,9 +49,9 @@ object ReceiveController extends Controller with Secured {
 
         Logger.info("Add present to registry")
 
-        Event.findById(presentForm._4) match {
-          case Some(event) => {
-            new Present(presentForm._1.trim, presentForm._2, presentForm._3.trim, event).save
+        Occasion.findById(presentForm._4) match {
+          case Some(occasion) => {
+            new Present(presentForm._1.trim, presentForm._2, presentForm._3.trim, occasion).save
             Redirect(routes.ReceiveController.showReceive()).flashing("messageSuccess" -> "Present recorded")
           }
           case None => {

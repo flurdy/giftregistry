@@ -1,5 +1,6 @@
-@(sessionPerson:Person,events:Seq[Event])(implicit flash:Flash, analyticsDetails: Option[String])
+@(sessionPerson:Person,occasions:Seq[Occasion])(implicit flash:Flash, analyticsDetails: Option[String])
 
+@import models._
 @import helper._
 
 @nautical("Gift Registry Receive ") {
@@ -24,23 +25,20 @@
 
     <div class="well">
 
-        <h4>Events</h4>
+        <h4>Occasions</h4>
 
-
+        @if(!occasions.isEmpty){
         <ol>
-
-            <li><a href="#">Christmas 2012</a></li>
-            <li><a href="#">John's 36th birthday in 2012</a></li>
-            <li><a href="#">Susan's 34th birthday in 2012</a></li>
-            <li><a href="#">Christmas 2011</a></li>
-            <li><a href="#">John's 35th birthday in 2011</a></li>
+            @for(occasion<-occasions){
+                <li><a href="@routes.OccasionController.showOccasion(occasion.occasionId.get.toString)">@occasion.title</a></li>
+            }
         </ol>
-
+        }
 
         <div class="well">
-            @form( action = routes.EventController.createEvent, 'class -> "form-inline"){
-                <input type="text" name="title" placeholder="Name of new event"/>
-                <button type="submit" class="btn btn-inverse">add new event</button>
+            @form( action = routes.OccasionController.createOccasion, 'class -> "form-inline"){
+                <input type="text" name="title" placeholder="Name of new occasion"/>
+                <button type="submit" class="btn btn-warning">add new occasion</button>
             }
         </div>
 
