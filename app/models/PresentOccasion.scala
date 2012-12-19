@@ -4,6 +4,9 @@ import org.bson.types.ObjectId
 import com.mongodb.casbah.commons.MongoDBObject
 import com.mongodb.casbah.Imports._
 import play.api._
+import play.api.Play.current
+import scala.Some
+import com.mongodb.casbah.MongoURI
 
 case class Present(
       presentId: Option[String] = None,
@@ -24,7 +27,9 @@ case class Present(
 
 object Present {
 
-  val mongoPresentConnection = MongoConnection()("giftdb")("present")
+  val mongoUri = Play.configuration.getString("mongodb.uri").get
+
+  val mongoPresentConnection = MongoConnection(MongoURI(mongoUri))("giftdb")("present")
 
 
   def save(present:Present) = {
@@ -58,7 +63,9 @@ case class Occasion(
 
 object Occasion {
 
-  val mongoOccasionConnection = MongoConnection()("giftdb")("occasion")
+  val mongoUri = Play.configuration.getString("mongodb.uri").get
+
+  val mongoOccasionConnection = MongoConnection(MongoURI(mongoUri))("giftdb")("occasion")
 
   def findById(occasionId:String) = {
     val searchTerm = MongoDBObject("occasionId" -> new ObjectId(occasionId))

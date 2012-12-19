@@ -3,6 +3,9 @@ package models
 // import play.api.Play.current
 import org.mindrot.jbcrypt.BCrypt
 import play.api._
+import play.api.Play.current
+import com.mongodb.casbah.MongoURI
+
 // import play.api.db.DB
 // import anorm._
 // import anorm.SqlParser._
@@ -48,7 +51,9 @@ object Person {
 
   def passwordMatch(enteredPassword:String,existingPassword:String) = BCrypt.checkpw(enteredPassword,existingPassword)
 
-  val mongoPersonConnection = MongoConnection()("giftdb")("person")
+  val mongoUri = Play.configuration.getString("mongodb.uri").get
+
+  val mongoPersonConnection = MongoConnection(MongoURI(mongoUri))("giftdb")("person")
 
 
   def save(person:Person) = {
