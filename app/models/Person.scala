@@ -5,14 +5,6 @@ import org.mindrot.jbcrypt.BCrypt
 import play.api._
 import play.api.Play.current
 import com.mongodb.casbah.MongoURI
-
-// import play.api.db.DB
-// import anorm._
-// import anorm.SqlParser._
-// import play.Logger
-// import java.math.BigInteger
-// import java.security.SecureRandom
-// import play.api.Play
 import com.mongodb.casbah.Imports._
 
 
@@ -45,15 +37,13 @@ case class Person(
 
 }
 
-object Person {
+object Person  {
 
   def encrypt(password: String) = Some(BCrypt.hashpw(password,BCrypt.gensalt()))
 
   def passwordMatch(enteredPassword:String,existingPassword:String) = BCrypt.checkpw(enteredPassword,existingPassword)
 
-  val mongoUri = Play.configuration.getString("mongodb.uri").get
-
-  val mongoPersonConnection = MongoConnection(MongoURI(mongoUri))("giftdb")("person")
+  val collection = MongoRepository.getMongoCollection("person")
 
 
   def save(person:Person) = {
@@ -64,7 +54,7 @@ object Person {
           "fullname" -> person.fullname,
           "email" -> person.email,
           "password" -> person.getEncryptedPassword)
-    mongoPersonConnection += mongoObject
+    collection += mongoObject
     person.copy(personId = Some(newId.toString))
   }
 
@@ -72,7 +62,7 @@ object Person {
   def authenticate(username:String,password:String) : Option[Person] = {
     val searchTerm = MongoDBObject("username" -> username)
     val fieldsNeeded = MongoDBObject("password" -> 1)
-    mongoPersonConnection.findOne(searchTerm,fieldsNeeded) map { personObject =>
+    collection.findOne(searchTerm,fieldsNeeded) map { personObject =>
       personObject.getAs[String]("password").map{ existingPassword =>
         if(passwordMatch(password,existingPassword)){
           return findByUsername(username)
@@ -90,7 +80,7 @@ object Person {
   def findByUsername(username:String) : Option[Person] = {
     val searchTerm = MongoDBObject("username" -> username)
     val fieldsNeeded = MongoDBObject("fullname" -> 1,"email" -> 1)
-    mongoPersonConnection.findOne(searchTerm,fieldsNeeded) map { personObject =>
+    collection.findOne(searchTerm,fieldsNeeded) map { personObject =>
       new Person(
         Some(personObject.getAs[ObjectId]("_id").get.toString),
         username,

@@ -27,10 +27,7 @@ case class Present(
 
 object Present {
 
-  val mongoUri = Play.configuration.getString("mongodb.uri").get
-
-  val mongoPresentConnection = MongoConnection(MongoURI(mongoUri))("giftdb")("present")
-
+  val collection =  MongoRepository.getMongoCollection("present")
 
   def save(present:Present) = {
     val newId = new ObjectId
@@ -41,7 +38,7 @@ object Present {
       "from" -> present.from,
       "occasionId" -> present.occasion.occasionId )
       // "personId" -> new ObjectId(personId) )
-    mongoPresentConnection += mongoObject
+    collection += mongoObject
     present.copy(presentId = Some(newId.toString))
   }
 
@@ -63,14 +60,12 @@ case class Occasion(
 
 object Occasion {
 
-  val mongoUri = Play.configuration.getString("mongodb.uri").get
-
-  val mongoOccasionConnection = MongoConnection(MongoURI(mongoUri))("giftdb")("occasion")
+  val collection = MongoRepository.getMongoCollection("occasion")
 
   def findById(occasionId:String) = {
     val searchTerm = MongoDBObject("occasionId" -> new ObjectId(occasionId))
     val fieldsNeeded = MongoDBObject("title" -> 1)
-    mongoOccasionConnection.findOne(searchTerm,fieldsNeeded) map { occasionObject =>
+    collection.findOne(searchTerm,fieldsNeeded) map { occasionObject =>
       Occasion(
         Some(occasionObject.getAs[ObjectId]("_id").get.toString),
         occasionObject.getAs[String]("title").getOrElse(""),
@@ -90,7 +85,7 @@ object Occasion {
           "_id" -> newId,
           "title" -> occasion.title,
           "personId" -> new ObjectId(personId))
-        mongoOccasionConnection += mongoObject
+        collection += mongoObject
         occasion.copy(occasionId = Some(newId.toString))
 
       }
@@ -103,7 +98,7 @@ object Occasion {
     person.personId match {
       case Some(personId) => {
         val searchTerm = MongoDBObject("personId" -> new ObjectId(personId))
-        val occasions = mongoOccasionConnection.find(searchTerm) map { occasionObject =>
+        val occasions = collection.find(searchTerm) map { occasionObject =>
          Occasion(
             Some(occasionObject.getAs[ObjectId]("_id").get.toString),
             occasionObject.getAs[String]("title").getOrElse(""),
