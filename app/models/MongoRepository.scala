@@ -1,9 +1,8 @@
 package models
 
 import com.mongodb.casbah._
-import play.api.Play
+import play.api._
 import play.api.Play.current
-import akka.event.slf4j.Logger
 
 object MongoRepository {
 
