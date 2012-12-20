@@ -12,8 +12,12 @@ object MongoRepository {
     mongoUri.connectDB match {
       case Left(thrown) => throw thrown
       case Right(database) => {
+        Logger.info("Was auth %b".format( database.isAuthenticated ) )
+        Logger.info("auth %b".format( database.authenticate(mongoUri.username.get,mongoUri.password.foldLeft("")(_ + _.toString)) ))
         Logger.info("Is auth %b".format( database.isAuthenticated ) )
-        database.authenticate(mongoUri.username.get,mongoUri.password.foldLeft("")(_ + _.toString))
+
+        database.underlying.authenticate(mongoUri.username.get,mongoUri.password.get)
+
         Logger.info("Is auth %b".format( database.isAuthenticated ) )
 
         database.apply(collectionName)
