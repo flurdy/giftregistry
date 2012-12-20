@@ -13,8 +13,9 @@ object MongoRepository {
       case Left(thrown) => throw thrown
       case Right(database) => {
         Logger.info("Is auth %b".format( database.isAuthenticated ) )
-        database.authenticate(mongoUri.username.get,mongoUri.password.get.toString)
+        database.authenticate(mongoUri.username.get,mongoUri.password.foldLeft("")(_ + _.toString))
         Logger.info("Is auth %b".format( database.isAuthenticated ) )
+
         database.apply(collectionName)
       }
     }
