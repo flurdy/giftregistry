@@ -6,7 +6,7 @@ import models._
 import play.api.Play.current
 
 
-trait Secured {
+trait    Secured {
 	
   def username(request: RequestHeader) = request.session.get(Security.username)
 

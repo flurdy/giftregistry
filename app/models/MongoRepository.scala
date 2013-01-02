@@ -12,8 +12,10 @@ object MongoRepository {
     mongoUri.connectDB match {
       case Left(thrown) => throw thrown
       case Right(database) => {
-        if (mongoUri.username != null && mongoUri.password != null) {
-          database.underlying.authenticate(mongoUri.username.get,mongoUri.password.get)
+        mongoUri.username.map { username =>
+          mongoUri.password.map { password =>
+            database.underlying.authenticate(username,password)
+          }
         }
         database.apply(collectionName)
       }
