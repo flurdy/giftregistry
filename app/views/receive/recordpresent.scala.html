@@ -1,4 +1,4 @@
-@(sessionPerson:Person,fullPresentForm:Form[(String,Option[String],String,String)])(implicit flash:Flash, analyticsDetails: Option[String])
+@(sessionPerson:Person,fullPresentForm:Form[(String,Option[String],String,String)],occasions:Seq[Occasion])(implicit flash:Flash, analyticsDetails: Option[String])
 
 @import helper._
 
@@ -39,11 +39,9 @@
             <label class="control-label" for="inputEvent">Event</label>
             <div class="controls">
                 <select name="event" id="inputEvent" size="1" class="input-xlarge">
-                    <option value="123" @if(fullPresentForm("event")==123){ selected="selected" }>Christmas 2012</option>
-                    <option value="124" @if(fullPresentForm("event")==124){ selected="selected" }>John's 36th birthday in 2012</option>
-                    <option value="125" @if(fullPresentForm("event")==125){ selected="selected" }>Susan's 34th birthday in 2012</option>
-                    <option value="126" @if(fullPresentForm("event")==126){ selected="selected" }>Christmas 2011</option>
-                    <option value="127" @if(fullPresentForm("event")==127){ selected="selected" }>John's 35th birthday in 2011</option>
+                    @for(occasion<-occasions){
+                        <option value="@occasion.occasionId.get.toString" ss="@fullPresentForm("event").value" @if(fullPresentForm("event").value==occasion.occasionId.get.toString){ selected="selected" }>@occasion.title</option>
+                    }
                 </select>
             </div>
         </div>

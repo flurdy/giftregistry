@@ -30,20 +30,22 @@ object ReceiveController extends Controller with Secured {
 
 
   def startPresentRegistration = withSessionPerson { sessionPerson => implicit request =>
+    val occasions = Occasion.findByPerson(sessionPerson)
     simpleRegisterForm.bindFromRequest.fold (
-      errors => Ok(views.html.receive.recordpresent(sessionPerson,fullPresentForm)),
+      errors => Ok(views.html.receive.recordpresent(sessionPerson,fullPresentForm,occasions)),
       presentTitle => {
-        Ok(views.html.receive.recordpresent(sessionPerson,fullPresentForm.fill(presentTitle.getOrElse(""),None,"","")))
+        Ok(views.html.receive.recordpresent(sessionPerson,fullPresentForm.fill(presentTitle.getOrElse(""),None,"",""),occasions))
       }
     )
   }
 
 
   def registerPresent =  withSessionPerson { sessionPerson => implicit request =>
+    val occasions = Occasion.findByPerson(sessionPerson)
     fullPresentForm.bindFromRequest.fold (
       errors => {
         Logger.warn("Present registration failed")
-        BadRequest(views.html.receive.recordpresent(sessionPerson,errors))
+        BadRequest(views.html.receive.recordpresent(sessionPerson,errors,occasions))
       },
       presentForm => {
 
@@ -57,7 +59,7 @@ object ReceiveController extends Controller with Secured {
           case None => {
             Logger.warn("Event not found")
             NotFound(views.html.receive.recordpresent(sessionPerson,fullPresentForm.fill(
-                presentForm._1, presentForm._2, presentForm._3, presentForm._4))).flashing("messageError"->"Event not found")
+                presentForm._1, presentForm._2, presentForm._3, presentForm._4),occasions)).flashing("messageError"->"Event not found")
           }
         }
       }
