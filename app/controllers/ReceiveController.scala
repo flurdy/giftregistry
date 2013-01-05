@@ -57,7 +57,7 @@ object ReceiveController extends Controller with Secured {
             Redirect(routes.ReceiveController.showReceive()).flashing("messageSuccess" -> "Present recorded")
           }
           case None => {
-            Logger.warn("Event not found")
+            Logger.warn("Event not found:%s".format(presentForm._4))
             NotFound(views.html.receive.recordpresent(sessionPerson,fullPresentForm.fill(
                 presentForm._1, presentForm._2, presentForm._3, presentForm._4),occasions)).flashing("messageError"->"Event not found")
           }
