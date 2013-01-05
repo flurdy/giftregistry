@@ -40,7 +40,9 @@
             <div class="controls">
                 <select name="event" id="inputEvent" size="1" class="input-xlarge">
                     @for(occasion<-occasions){
-                        <option value="@occasion.occasionId.get.toString" ss="@fullPresentForm("event").value" @if(fullPresentForm("event").value==occasion.occasionId.get.toString){ selected="selected" }>@occasion.title</option>
+                        <option value="@occasion.occasionId.get.toString" @if(fullPresentForm("event").value.getOrElse("") == occasion.occasionId.get.toString){
+                                selected="selected"
+                            } >@occasion.title</option>
                     }
                 </select>
             </div>
