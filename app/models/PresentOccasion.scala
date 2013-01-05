@@ -63,31 +63,29 @@ object Occasion {
   val collection = MongoRepository.getMongoCollection("occasion")
 
   def findById(occasionId:String) = {
-    val searchTerm = MongoDBObject("occasionId" -> new ObjectId(occasionId))
+    val searchTerm = MongoDBObject("_id" -> new ObjectId(occasionId))
+    Logger.info("find id "+ new ObjectId(occasionId).toString)
     val fieldsNeeded = MongoDBObject("title" -> 1)
     collection.findOne(searchTerm,fieldsNeeded) map { occasionObject =>
+      Logger.info("Found an occasion")
       Occasion(
         Some(occasionObject.getAs[ObjectId]("_id").get.toString),
         occasionObject.getAs[String]("title").getOrElse(""),
         new Person(occasionObject.getAs[ObjectId]("personId").toString)
       )
     }
-
   }
 
 
   def save(occasion:Occasion) = {
     occasion.person.personId match {
       case Some(personId) => {
-
         val newId = new ObjectId
-        val mongoObject = MongoDBObject(
+        collection += MongoDBObject(
           "_id" -> newId,
           "title" -> occasion.title,
           "personId" -> new ObjectId(personId))
-        collection += mongoObject
         occasion.copy(occasionId = Some(newId.toString))
-
       }
       case None => throw new NullPointerException("Person id was null")
     }

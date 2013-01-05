@@ -38,9 +38,10 @@
         <div class="control-group">
             <label class="control-label" for="inputEvent">Event</label>
             <div class="controls">
-                <select name="event" id="inputEvent" size="1" class="input-xlarge">
+                <select name="occassion" id="inputEvent" size="1" class="input-xlarge">
                     @for(occasion<-occasions){
-                        <option value="@occasion.occasionId.get.toString" @if(fullPresentForm("event").value.getOrElse("") == occasion.occasionId.get.toString){
+                        <option value="@occasion.occasionId.get.toString"
+                            @if(fullPresentForm("occassion").value.getOrElse("") == occasion.occasionId.get.toString){
                                 selected="selected"
                             } >@occasion.title</option>
                     }

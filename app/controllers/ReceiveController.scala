@@ -17,7 +17,7 @@ object ReceiveController extends Controller with Secured {
       "title" -> text(minLength=2, maxLength = 100),
       "description" -> optional(text(maxLength = 2000)),
       "from" -> text(minLength=2, maxLength = 100),
-      "event" -> text(maxLength = 100)
+      "occassion" -> text(minLength = 10,maxLength = 100)
     )
   }
 
@@ -57,7 +57,7 @@ object ReceiveController extends Controller with Secured {
             Redirect(routes.ReceiveController.showReceive()).flashing("messageSuccess" -> "Present recorded")
           }
           case None => {
-            Logger.warn("Event not found:%s".format(presentForm._4))
+            Logger.warn("Occasion not found: %s".format(presentForm._4))
             NotFound(views.html.receive.recordpresent(sessionPerson,fullPresentForm.fill(
                 presentForm._1, presentForm._2, presentForm._3, presentForm._4),occasions)).flashing("messageError"->"Event not found")
           }
