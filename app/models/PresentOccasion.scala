@@ -27,21 +27,40 @@ case class Present(
 
 object Present {
 
+
   val collection =  MongoRepository.getMongoCollection("present")
 
   def save(present:Present) = {
     val newId = new ObjectId
     val mongoObject = MongoDBObject(
-      "_id" -> newId,
-      "title" -> present.title,
-      "description" -> present.description.getOrElse(""),
-      "from" -> present.from,
-      "occasionId" -> present.occasion.occasionId )
-      // "personId" -> new ObjectId(personId) )
+    "_id" -> newId,
+    "title" -> present.title,
+    "description" -> present.description.getOrElse(""),
+    "from" -> present.from,
+    "occasionId" -> new ObjectId(present.occasion.occasionId.get) )
+    // "personId" -> new ObjectId(personId) )
     collection += mongoObject
     present.copy(presentId = Some(newId.toString))
   }
 
+  def findByOccasion(occasion: Occasion, person: Person) : Seq[Present]= {
+    occasion.occasionId match {
+      case Some(occasionId) => {
+        val searchTerm = MongoDBObject("occasionId" -> new ObjectId(occasionId))
+        val presents = collection.find(searchTerm) map { presentObject =>
+          Present(
+            Some(presentObject.getAs[ObjectId]("_id").get.toString),
+            presentObject.getAs[String]("title").getOrElse(""),
+            presentObject.getAs[String]("description"),
+            presentObject.getAs[String]("from").getOrElse(""),
+            occasion
+          )
+        }
+        presents.toSeq
+      }
+      case None => Seq.empty
+    }
+  }
 }
 
 

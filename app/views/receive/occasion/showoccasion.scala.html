@@ -1,0 +1,33 @@
+@(sessionPerson:Person, occasion:Occasion, presents:Seq[Present])(implicit flash:Flash, analyticsDetails: Option[String])
+
+@import models._
+@import helper._
+
+@nautical("Gift Registry Receive Occasion") {
+
+
+} {
+
+
+    <div class="well">
+        <h3>Occasion</h3>
+        <p>@occasion.title</p>
+    </div>
+
+
+    @if(!presents.isEmpty){
+    <div class="well">
+        <h4>Presents</h4>
+        <ol>
+        @for(present <- presents){
+             <li>@present.title  from   @present.from</li>
+        }
+        </ol>
+    </div>
+    }
+
+
+
+
+
+}

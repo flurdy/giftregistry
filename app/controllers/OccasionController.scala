@@ -13,7 +13,6 @@ object OccasionController extends Controller with Secured {
   }
 
 
-
   def createOccasion = withSessionPerson { sessionPerson => implicit request =>
     simpleOccasionForm.bindFromRequest.fold (
       errors => {
@@ -28,8 +27,19 @@ object OccasionController extends Controller with Secured {
     )
   }
 
+
   def showOccasion(occasionId:String) = withSessionPerson { sessionPerson => implicit request =>
-    NotImplemented("Coming soon")
+    Occasion.findById(occasionId) match {
+      case Some(occasion) => {
+        val presents = Present.findByOccasion(occasion,sessionPerson)
+        Logger.warn("Presents found: %d".format(presents.size))
+        Ok(views.html.receive.occasion.showoccasion(sessionPerson,occasion,presents))
+      }
+      case None => {
+        Logger.warn("Occasion not found: %s".format(occasionId))
+        NotFound.flashing("messageError"->"Occasion not found")
+      }
+    }
   }
 
 
