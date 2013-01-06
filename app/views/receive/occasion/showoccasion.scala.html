@@ -1,32 +1,62 @@
-@(sessionPerson:Person, occasion:Occasion, presents:Seq[Present])(implicit flash:Flash, analyticsDetails: Option[String])
+@(sessionPerson:Person, occasion:Occasion, presents:Seq[Present],fullPresentForm:Form[(String,Option[String],String,String)])(implicit flash:Flash, analyticsDetails: Option[String])
 
 @import models._
 @import helper._
 
-@nautical("Gift Registry Receive Occasion") {
+@nautical("Occasion | Receive | Gift Registry ") {
 
 
 } {
 
 
     <div class="well">
-        <h3>Occasion</h3>
-        <p>@occasion.title</p>
+        <h3>Occasion: @occasion.title</h3>
     </div>
 
 
     @if(!presents.isEmpty){
     <div class="well">
-        <h4>Presents</h4>
-        <ol>
+        <h4>Presents received</h4>
+        <ul>
         @for(present <- presents){
-             <li>@present.title  from   @present.from</li>
+             <li><strong>@present.title</strong>  from   <em>@present.from</em></li>
         }
-        </ol>
+        </ul>
     </div>
     }
 
 
+    <div class="well">
+
+        @form( action = routes.ReceiveController.registerPresent, 'class -> "form-horizontal"){
+
+            <input type="hidden" name="occasion" value="@occasion.occasionId.get"/>
+
+
+            <div class="control-group">
+                <label class="control-label" for="inputFrom">From</label>
+                <div class="controls">
+                <input type="text" name="from" class="input-xlarge" id="inputFrom" maxlength="100" placeholder="Who was the present from?" value="@fullPresentForm("from").value"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="inputTitle">Present title</label>
+                <div class="controls">
+                <input type="text" name="title" class="input-xlarge" id="inputTitle"  maxlength="100"
+                    placeholder="Enter a title for the present" value="@fullPresentForm("title").value" />
+                </div>
+            </div>
+
+
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-success">add present</button>
+                </div>
+            </div>
+        }
+
+    </div>
 
 
 

@@ -17,7 +17,7 @@ object ReceiveController extends Controller with Secured {
       "title" -> text(minLength=2, maxLength = 100),
       "description" -> optional(text(maxLength = 2000)),
       "from" -> text(minLength=2, maxLength = 100),
-      "occassion" -> text(minLength = 10,maxLength = 100)
+      "occasion" -> text(minLength = 10,maxLength = 100)
     )
   }
 
@@ -54,7 +54,7 @@ object ReceiveController extends Controller with Secured {
         Occasion.findById(presentForm._4) match {
           case Some(occasion) => {
             new Present(presentForm._1.trim, presentForm._2, presentForm._3.trim, occasion).save
-            Redirect(routes.ReceiveController.showReceive()).flashing("messageSuccess" -> "Present recorded")
+            Redirect(routes.OccasionController.showOccasion(occasion.occasionId.get)).flashing("messageSuccess" -> "Present recorded")
           }
           case None => {
             Logger.warn("Occasion not found: %s".format(presentForm._4))
