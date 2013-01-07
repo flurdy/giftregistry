@@ -13,13 +13,17 @@ case class Present(
       title: String,
       description: Option[String],
       from: String,
+      recipient:Person,
       occasion: Occasion
     ) {
 
-    def this( title: String, description: Option[String], from: String, occasion: Occasion) = this(None,title,description,from,occasion)
+  def this( title: String, description: Option[String], from: String, recipient:Person,occasion: Occasion) = this(None,title,description,from,recipient,occasion)
 
-    def save = Present.save(this)
 
+  def save = Present.save(this)
+
+
+  def update = Present.update(this)
 }
 
 
@@ -37,28 +41,64 @@ object Present {
     "title" -> present.title,
     "description" -> present.description.getOrElse(""),
     "from" -> present.from,
+    "recipientId" -> new ObjectId(present.recipient.personId.get),
     "occasionId" -> new ObjectId(present.occasion.occasionId.get) )
-    // "personId" -> new ObjectId(personId) )
     collection += mongoObject
     present.copy(presentId = Some(newId.toString))
+  }
+
+  def update(present: Present) = {
+    val searchTerm = MongoDBObject("_id" -> new ObjectId(present.presentId.get))
+    collection.update(searchTerm,$set(
+      "title"->present.title,
+      "from"->present.from,
+      "description" -> present.description.getOrElse(""),
+      "occasionId" -> new ObjectId(present.occasion.occasionId.get)))
+  }
+
+  def findById(presentId:String) : Option[Present] = {
+    val searchTerm = MongoDBObject("_id" -> new ObjectId(presentId))
+    Logger.info("find id "+ new ObjectId(presentId).toString)
+    val fieldsNeeded = MongoDBObject("title" -> 1,"description" -> 1,"from" -> 1,"occasionId" -> 1,"recipientId" -> 1)
+    collection.findOne(searchTerm,fieldsNeeded) map { mongoObject =>
+      Logger.info("Found a present")
+      val person = new Person(mongoObject.getAs[ObjectId]("recipientId").toString)
+      Present(
+        Some(mongoObject.getAs[ObjectId]("_id").get.toString),
+        mongoObject.getAs[String]("title").getOrElse(""),
+        mongoObject.getAs[String]("description"),
+        mongoObject.getAs[String]("from").getOrElse(""),
+        person,
+        Occasion(mongoObject.getAs[ObjectId]("occasionId").map( _.toString ),"",person)
+      )
+    }
   }
 
   def findByOccasion(occasion: Occasion, person: Person) : Seq[Present]= {
     occasion.occasionId match {
       case Some(occasionId) => {
-        val searchTerm = MongoDBObject("occasionId" -> new ObjectId(occasionId))
-        val presents = collection.find(searchTerm) map { presentObject =>
-          Present(
-            Some(presentObject.getAs[ObjectId]("_id").get.toString),
-            presentObject.getAs[String]("title").getOrElse(""),
-            presentObject.getAs[String]("description"),
-            presentObject.getAs[String]("from").getOrElse(""),
-            occasion
-          )
+        person.personId match {
+          case Some(personId) => {
+            val searchTerm = MongoDBObject(
+              "occasionId" -> new ObjectId(occasionId),
+              "recipientId" -> new ObjectId(personId)
+            )
+            val presents = collection.find(searchTerm) map { presentObject =>
+              Present(
+                Some(presentObject.getAs[ObjectId]("_id").get.toString),
+                presentObject.getAs[String]("title").getOrElse(""),
+                presentObject.getAs[String]("description"),
+                presentObject.getAs[String]("from").getOrElse(""),
+                person,
+                occasion
+              )
+            }
+            presents.toSeq
+          }
+          case None => throw new NullPointerException("Person id was null")
         }
-        presents.toSeq
       }
-      case None => Seq.empty
+      case None => throw new NullPointerException("Occasion id was null")
     }
   }
 }
@@ -83,7 +123,6 @@ object Occasion {
 
   def findById(occasionId:String) = {
     val searchTerm = MongoDBObject("_id" -> new ObjectId(occasionId))
-    Logger.info("find id "+ new ObjectId(occasionId).toString)
     val fieldsNeeded = MongoDBObject("title" -> 1)
     collection.findOne(searchTerm,fieldsNeeded) map { occasionObject =>
       Logger.info("Found an occasion")

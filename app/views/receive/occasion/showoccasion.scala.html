@@ -19,7 +19,7 @@
         <h4>Presents received</h4>
         <ul>
         @for(present <- presents){
-             <li><strong>@present.title</strong>  from   <em>@present.from</em></li>
+             <li><a href="@routes.PresentController.showPresent(present.presentId.get)"><strong>@present.title</strong></a>  from   <em>@present.from</em></li>
         }
         </ul>
     </div>
@@ -28,7 +28,7 @@
 
     <div class="well">
 
-        @form( action = routes.ReceiveController.registerPresent, 'class -> "form-horizontal"){
+        @form( action = routes.PresentController.registerPresent, 'class -> "form-horizontal"){
 
             <input type="hidden" name="occasion" value="@occasion.occasionId.get"/>
 

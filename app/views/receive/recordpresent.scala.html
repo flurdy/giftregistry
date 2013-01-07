@@ -32,18 +32,18 @@
 
     <div class="well">
 
-        @form( action = routes.ReceiveController.registerPresent, 'class -> "form-horizontal"){
+        @form( action = routes.PresentController.registerPresent, 'class -> "form-horizontal"){
 
 
         <div class="control-group">
-            <label class="control-label" for="inputEvent">Event</label>
+            <label class="control-label" for="inputEvent">Occasion</label>
             <div class="controls">
                 <select name="occasion" id="inputEvent" size="1" class="input-xlarge">
                     @for(occasion<-occasions){
                         <option value="@occasion.occasionId.get.toString"
                             @if(fullPresentForm("occasion").value.getOrElse("") == occasion.occasionId.get.toString){
                                 selected="selected"
-                            } ss="@fullPresentForm("occasion").value">@occasion.title</option>
+                            }>@occasion.title</option>
                     }
                 </select>
             </div>

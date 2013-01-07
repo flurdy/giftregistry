@@ -33,7 +33,7 @@ object OccasionController extends Controller with Secured {
       case Some(occasion) => {
         val presents = Present.findByOccasion(occasion,sessionPerson)
         Logger.warn("Presents found: %d".format(presents.size))
-        Ok(views.html.receive.occasion.showoccasion(sessionPerson,occasion,presents,ReceiveController.fullPresentForm))
+        Ok(views.html.receive.occasion.showoccasion(sessionPerson,occasion,presents,PresentController.fullPresentForm))
       }
       case None => {
         Logger.warn("Occasion not found: %s".format(occasionId))
@@ -42,7 +42,5 @@ object OccasionController extends Controller with Secured {
     }
   }
 
-
-
-
 }
+

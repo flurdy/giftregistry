@@ -8,6 +8,19 @@ import models._
 
 object ReceiveController extends Controller with Secured {
 
+
+
+  def showReceive = withSessionPerson { sessionPerson => implicit request =>
+    val occasions = Occasion.findByPerson(sessionPerson)
+    Logger.info("Occasions found %d".format(occasions.size))
+    Ok(views.html.receive.receive(sessionPerson,occasions))
+  }
+
+}
+
+
+object PresentController extends Controller with Secured {
+
   val simpleRegisterForm = Form {
     "title" -> optional(text(maxLength = 100))
   }
@@ -20,14 +33,6 @@ object ReceiveController extends Controller with Secured {
       "occasion" -> text(minLength = 10,maxLength = 100)
     )
   }
-
-
-  def showReceive = withSessionPerson { sessionPerson => implicit request =>
-    val occasions = Occasion.findByPerson(sessionPerson)
-    Logger.info("Occasions found %d".format(occasions.size))
-    Ok(views.html.receive.receive(sessionPerson,occasions))
-  }
-
 
   def startPresentRegistration = withSessionPerson { sessionPerson => implicit request =>
     val occasions = Occasion.findByPerson(sessionPerson)
@@ -53,13 +58,13 @@ object ReceiveController extends Controller with Secured {
 
         Occasion.findById(presentForm._4) match {
           case Some(occasion) => {
-            new Present(presentForm._1.trim, presentForm._2, presentForm._3.trim, occasion).save
+            new Present(presentForm._1.trim, presentForm._2, presentForm._3.trim, sessionPerson, occasion).save
             Redirect(routes.OccasionController.showOccasion(occasion.occasionId.get)).flashing("messageSuccess" -> "Present recorded")
           }
           case None => {
             Logger.warn("Occasion not found: %s".format(presentForm._4))
             NotFound(views.html.receive.recordpresent(sessionPerson,fullPresentForm.fill(
-                presentForm._1, presentForm._2, presentForm._3, presentForm._4),occasions)).flashing("messageError"->"Event not found")
+                presentForm._1, presentForm._2, presentForm._3, presentForm._4),occasions)).flashing("messageError"->"Occasion not found")
           }
         }
       }
@@ -67,4 +72,55 @@ object ReceiveController extends Controller with Secured {
   }
 
 
+
+  def showPresent(presentId:String) = withSessionPerson { sessionPerson => implicit request =>
+    Present.findById(presentId) match {
+      case Some(present) => {
+        val occasions = Occasion.findByPerson(sessionPerson)
+        Logger.info("presetn occasion %s".format(present.occasion.occasionId))
+        Logger.info("presetn  %s".format(present))
+        Ok(views.html.receive.showpresent(sessionPerson,occasions,present,fullPresentForm))
+      }
+      case None => NotFound
+    }
+  }
+
+
+
+  def updatePresent(presentId:String) = withSessionPerson { sessionPerson => implicit request =>
+    val occasions = Occasion.findByPerson(sessionPerson)
+    Present.findById(presentId) match {
+      case Some(present) => {
+        fullPresentForm.bindFromRequest.fold (
+          errors => {
+            Logger.warn("Present update failed")
+            BadRequest(views.html.receive.showpresent(sessionPerson,occasions,present,errors))
+          },
+          presentForm => {
+
+            Logger.info("Update present")
+
+            Occasion.findById(presentForm._4) match {
+              case Some(occasion) => {
+
+//                new Present(presentForm._1.trim, presentForm._2, presentForm._3.trim, sessionPerson, occasion).save
+
+                present.copy(title=presentForm._1.trim,from=presentForm._3.trim,occasion=occasion,description=presentForm._2).update
+
+                Redirect(routes.OccasionController.showOccasion(occasion.occasionId.get)).flashing("messageSuccess" -> "Present updated")
+              }
+              case None => {
+                Logger.warn("Occasion not found: %s".format(presentForm._4))
+                NotFound(views.html.receive.showpresent(sessionPerson,occasions,present,fullPresentForm.fill(
+                  presentForm._1, presentForm._2, presentForm._3, presentForm._4))).flashing("messageError"->"Occasion not found")
+              }
+            }
+          }
+        )
+      }
+      case None => NotFound(views.html.receive.receive(sessionPerson,occasions)).flashing("messageError"->"Present not found")
+    }
+  }
+
 }
+

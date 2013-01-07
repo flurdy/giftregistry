@@ -1,0 +1,79 @@
+@(sessionPerson:Person, occasions:Seq[Occasion], present:Present,fullPresentForm:Form[(String,Option[String],String,String)])(implicit flash:Flash, analyticsDetails: Option[String])
+
+@import models._
+@import helper._
+
+@nautical("Present | Receive | Gift Registry ") {
+
+
+} {
+
+
+    <div class="well">
+        <h3>Present: @present.title</h3>
+    </div>
+
+
+    <div class="well">
+
+        @form( action = routes.PresentController.updatePresent(present.presentId.get), 'class -> "form-horizontal"){
+
+            <div class="control-group">
+                <label class="control-label" for="inputEvent">Occasion</label>
+                <div class="controls">
+                    <select name="occasion" id="inputEvent" size="1" class="input-xlarge">
+                    @for(occasion<-occasions){
+                        <option
+                            @occasion.occasionId.map{ occasionId =>
+                                value="@occasionId.toString"
+                                @present.occasion.occasionId.map{ presentOccasionId =>
+                                    @if(fullPresentForm("occasion").value == occasionId.toString || presentOccasionId.toString == occasionId.toString){
+                                        selected="selected"
+                                    }
+                                }
+                            }
+                        >@occasion.title</option>
+                    }
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="control-group">
+                <label class="control-label" for="inputFrom">From</label>
+                <div class="controls">
+                <input type="text" name="from" class="input-xlarge" id="inputFrom" maxlength="100" placeholder="Who was the present from?" value="@fullPresentForm("from").value.getOrElse(present.from)"/>
+                </div>
+            </div>
+
+
+        <div class="control-group">
+            <label class="control-label" for="inputTitle">Present title</label>
+            <div class="controls">
+            <input type="text" name="title" class="input-xlarge" id="inputTitle"  maxlength="100"
+                placeholder="Enter a title for the present" value="@fullPresentForm("title").value.getOrElse(present.title)" />
+            </div>
+        </div>
+
+
+        <div class="control-group">
+            <label class="control-label" for="inputDescription">Description</label>
+            <div class="controls">
+                <textarea name="description" class="input-xlarge" rows="5" id="inputDescription" placeholder="Describe if necessary">@fullPresentForm("description").value.getOrElse(present.description)</textarea>
+            </div>
+        </div>
+
+
+
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-success">update present</button>
+            </div>
+        </div>
+
+    }
+
+
+</div>
+
+}

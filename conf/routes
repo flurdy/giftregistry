@@ -17,9 +17,14 @@ GET     /logout                           controllers.Application.logout
 
 
 GET     /receive/                   controllers.ReceiveController.showReceive
-POST     /receive/present/            controllers.ReceiveController.startPresentRegistration
-GET     /receive/present/            controllers.ReceiveController.startPresentRegistration
-POST     /receive/present/add        controllers.ReceiveController.registerPresent
+
+POST     /receive/present/            controllers.PresentController.startPresentRegistration
+GET     /receive/present/            controllers.PresentController.startPresentRegistration
+POST     /receive/present/add        controllers.PresentController.registerPresent
+
+GET     /receive/present/:presentId/            controllers.PresentController.showPresent(presentId)
+POST     /receive/present/:presentId/            controllers.PresentController.updatePresent(presentId)
+PUT     /receive/present/:presentId/            controllers.PresentController.updatePresent(presentId)
 
 POST    /occasion/                     controllers.OccasionController.createOccasion
 GET    /occasion/:occasionId/          controllers.OccasionController.showOccasion(occasionId)
