@@ -5,6 +5,7 @@
 
 @nautical("Present | Receive | Gift Registry ") {
 
+    <li><a href="@routes.OccasionController.showOccasion(present.occasion.occasionId.get.toString)">occasion </a><span class="divider">/</span></li>
 
 } {
 
@@ -16,7 +17,7 @@
 
     <div class="well">
 
-        @form( action = routes.PresentController.updatePresent(present.presentId.get), 'class -> "form-horizontal"){
+        @form( action = routes.PresentController.updatePresent(present.occasion.occasionId.get,present.presentId.get), 'class -> "form-horizontal"){
 
             <div class="control-group">
                 <label class="control-label" for="inputEvent">Occasion</label>
@@ -75,5 +76,5 @@
 
 
 </div>
-
+       <style>#jib, #lookout { display: block; }</style>
 }

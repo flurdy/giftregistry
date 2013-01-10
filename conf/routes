@@ -22,9 +22,9 @@ POST     /receive/present/            controllers.PresentController.startPresent
 GET     /receive/present/            controllers.PresentController.startPresentRegistration
 POST     /receive/present/add        controllers.PresentController.registerPresent
 
-GET     /receive/present/:presentId/            controllers.PresentController.showPresent(presentId)
-POST     /receive/present/:presentId/            controllers.PresentController.updatePresent(presentId)
-PUT     /receive/present/:presentId/            controllers.PresentController.updatePresent(presentId)
+GET     /receive/occasion/:occasionId/present/:presentId/            controllers.PresentController.showPresent(occasionId,presentId)
+POST     /receive/occasion/:occasionId/present/:presentId/            controllers.PresentController.updatePresent(occasionId,presentId)
+PUT     /receive/occasion/:occasionId/present/:presentId/            controllers.PresentController.updatePresent(occasionId,presentId)
 
 POST    /occasion/                     controllers.OccasionController.createOccasion
 GET    /occasion/:occasionId/          controllers.OccasionController.showOccasion(occasionId)

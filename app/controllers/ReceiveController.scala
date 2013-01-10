@@ -73,7 +73,7 @@ object PresentController extends Controller with Secured {
 
 
 
-  def showPresent(presentId:String) = withSessionPerson { sessionPerson => implicit request =>
+  def showPresent(occasionId:String,presentId:String) = withSessionPerson { sessionPerson => implicit request =>
     Present.findById(presentId) match {
       case Some(present) => {
         val occasions = Occasion.findByPerson(sessionPerson)
@@ -87,7 +87,7 @@ object PresentController extends Controller with Secured {
 
 
 
-  def updatePresent(presentId:String) = withSessionPerson { sessionPerson => implicit request =>
+  def updatePresent(occasionId:String,presentId:String) = withSessionPerson { sessionPerson => implicit request =>
     val occasions = Occasion.findByPerson(sessionPerson)
     Present.findById(presentId) match {
       case Some(present) => {

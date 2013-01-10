@@ -59,8 +59,8 @@
 */
 body {  background-color: #345464;  color: black; }
 #hull { background-color: #ffffff;  }
-#bow {   }
-#jib, #ballast { background-color: #b0b0b0; }
+#bow, #stern { background-color: #ffffff;  }
+#keel { background-color: #b0b0b0; }
 #tug > .compartment > iframe, #tug > .compartment img ,
 #net > .compartment > iframe, #net > .compartment img ,
 #ama > .compartment > iframe, #ama > .compartment img,
@@ -80,6 +80,8 @@ body {  }
 #starboard {  width: 4em; min-width: 4em;   }
 #hatch { width: 4em; min-width: 4em;   }
 #deck { width: 4em; min-width: 4em;  }
+
+#jib { padding: 0.2em 2em 0.2em 2em; }
 
 #port.compartment ,
 #starboard.compartment ,

@@ -19,7 +19,7 @@
         <h4>Presents received</h4>
         <ul>
         @for(present <- presents){
-             <li><a href="@routes.PresentController.showPresent(present.presentId.get)"><strong>@present.title</strong></a>  from   <em>@present.from</em></li>
+             <li><a href="@routes.PresentController.showPresent(occasion.occasionId.get,present.presentId.get)"><strong>@present.title</strong></a>  from   <em>@present.from</em></li>
         }
         </ul>
     </div>
@@ -58,6 +58,7 @@
 
     </div>
 
+    <style>#lookout { display: block; }</style>
 
 
 }
