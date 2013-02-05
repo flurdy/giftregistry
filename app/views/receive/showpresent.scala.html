@@ -5,7 +5,8 @@
 
 @nautical("Present | Receive | Gift Registry ") {
 
-    <li><a href="@routes.OccasionController.showOccasion(present.occasion.occasionId.get.toString)">occasion </a><span class="divider">/</span></li>
+    <li><a href="@routes.OccasionController.showOccasion(present.occasion.occasionId.get.toString)">occasion</a> <span class="divider">/</span></li>
+    <li><a href="@routes.PresentController.showPresent(present.occasion.occasionId.get.toString,present.presentId.get.toString)">present</a></li>
 
 } {
 
@@ -76,5 +77,5 @@
 
 
 </div>
-       <style>#jib, #lookout { display: block; }</style>
+       <style>#jib { display: block; }</style>
 }

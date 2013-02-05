@@ -52,3 +52,21 @@ ul.horizontal li {
 
 #cargo .control-label { width: 130px; }
 #cargo .controls { margin-left: 150px; }
+
+#cargo #receive-occasions > .well {
+    clear: both;
+
+}
+#cargo #receive-occasions ol {
+    max-width: 40em;
+}
+#cargo #receive-occasions ol li{
+    list-style: none;
+    display: inline;
+    width: 15em;
+    float: left;
+    margin: 0.3em 0.3em;
+    padding: 0.2em 1em;
+    vertical-align: middle;
+    text-align: center;
+}
